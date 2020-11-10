@@ -1,0 +1,3 @@
+<p *ngIf="control.invalid && (control.dirty || control.touched) && control.errors.required" class="text-red-500 text-xs italic"> El campo es requerido </p>
+<p *ngIf="control.invalid && (control.dirty || control.touched) && control.errors.max" class="text-red-500 text-xs italic"> Valor maximo superado </p>
+<p *ngIf="control.invalid && (control.dirty || control.touched) && control.errors.min" class="text-red-500 text-xs italic"> Valor debe ser superior a 0</p>

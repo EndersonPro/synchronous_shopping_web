@@ -1,0 +1,74 @@
+<div class="bg-white">
+    <div class="sm:max-w-full rounded overflow-hidden shadow-lg px-6 py-4 flex items-center flex-col">
+        <h4 class="font-bold text-3xl italic text-center mb-2 text-gray-700">Synchronous Shopping</h4>
+        <form class="w-full max-w-5xl" [formGroup]="formSyncronous" (ngSubmit)="sendRequest()">
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full md:w-1/3 px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-number-centers">
+                    C. Comerciales
+                    </label>
+                    <input (change)="changeCentersInput($event)" [ngClass]="{ 'border-red-500': ccenters.touched && ccenters.invalid }" min="2" max="1000" formControlName="ccenters" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-number-centers" type="number" placeholder="5">
+                    <app-control-errors [control]="ccenters"></app-control-errors>
+                </div>
+                <div class="w-full md:w-1/3 px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-number-fish">
+                    Tipos de pescados
+                    </label>
+                    <input [ngClass]="{ 'border-red-500': cfish.touched && cfish.invalid }" min="1" max="2000" formControlName="cfish" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-number-fish" type="number" placeholder="5">
+                    <app-control-errors [control]="cfish"></app-control-errors>
+                </div>
+                <div class="w-full md:w-1/3 px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-number-roads">
+                    Caminos
+                    </label>
+                    <input (change)="changeCRoadsInput($event)" [ngClass]="{ 'border-red-500': croads.touched && croads.invalid }" min="1" max="1000" formControlName="croads" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-number-roads" type="number" placeholder="5">
+                    <app-control-errors [control]="croads"></app-control-errors>
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-6 border-solid" [formGroup]="center" *ngFor="let center of centers.controls; let i = index">
+                <div class="w-full md:w-1/3 px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-number-centers">
+                        Tipos de peces {{ i }}
+                    </label>
+                    <input (change)="changeTypesFish(center)" [ngClass]="{ 'border-red-500': center.get('cant_type_fish').touched && center.get('cant_type_fish').invalid }" min="1" max="1000" formControlName="cant_type_fish" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-number-centers" type="number" placeholder="5">
+                    <app-control-errors [control]="center.get('cant_type_fish')"></app-control-errors>
+                </div>
+                <div class="w-full md:w-1/3 px-3" [formGroup]="typefish" *ngFor="let typefish of getTypesfishControl(center).controls; let i = index">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-number-centers">
+                        Tipo pez {{ i }}
+                    </label>
+                    <input [ngClass]="{ 'border-red-500': typefish.get('type_fish').touched && typefish.get('type_fish').invalid }" min="1" max="1000" formControlName="type_fish" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-number-centers" type="number" placeholder="5">
+                    <app-control-errors [control]="typefish.get('type_fish')"></app-control-errors>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap -mx-3 mb-6 border-solid" [formGroup]="road" *ngFor="let road of roads.controls; let i = index">
+                <div class="w-full md:w-1/3 px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-number-centers">
+                        Inicio {{ i }}
+                    </label>
+                    <input [ngClass]="{ 'border-red-500': road.get('center_init').touched && road.get('center_init').invalid }" min="1" max="1000" formControlName="center_init" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-number-centers" type="number" placeholder="5">
+                    <app-control-errors [control]="road.get('center_init')"></app-control-errors>
+                </div>
+                <div class="w-full md:w-1/3 px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-number-centers">
+                        Final {{ i }}
+                    </label>
+                    <input [ngClass]="{ 'border-red-500': road.get('center_end').touched && road.get('center_end').invalid }" min="1" max="1000" formControlName="center_end" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-number-centers" type="number" placeholder="5">
+                    <app-control-errors [control]="road.get('center_end')"></app-control-errors>
+                </div>
+                <div class="w-full md:w-1/3 px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-number-centers">
+                        Costo {{ i }}
+                    </label>
+                    <input [ngClass]="{ 'border-red-500': road.get('cost').touched && road.get('cost').invalid }" min="1" max="1000" formControlName="cost" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-number-centers" type="number" placeholder="5">
+                    <app-control-errors [control]="road.get('cost')"></app-control-errors>
+                </div>
+            </div>
+
+            <button type="submit" [disabled]="!this.formSyncronous.valid" [ngClass]="{ 'cursor-not-allowed': !this.formSyncronous.valid }" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                Button
+            </button>
+        </form>
+    </div>
+</div>
