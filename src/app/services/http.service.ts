@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -8,15 +8,23 @@ import { catchError } from 'rxjs/operators';
 })
 export class HttpService {
 
-  private API: string = 'https://taximo-test.herokuapp.com/api/v1';
+  private API: string = 'https://synchronous-shopping.herokuapp.com/api/v1';
 
   constructor(private httpClient: HttpClient) { }
 
   public sendData(data) {
-    return this.httpClient.post(`${this.API}/synchronous_shopping`, data).pipe(catchError(this.handleError))
+    const body = new HttpParams({ fromObject: 
+        { ...data, 
+            username: 'taximo_api_user',
+            checksum: 'cd7ced88fb72ee862940b1064555251f9ba044d8478a71a7b70b04bd708c2796' 
+        }});
+    console.log(body.toString());
+    return this.httpClient.post(`${this.API}/synchronous_shopping`, body.toString(), {
+        headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+    }).pipe(catchError(this.handleError))
   }
 
-  handleError(error: HttpErrorResponse) {
+  private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Unknown Error!';
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error: ${error.error.message}`;

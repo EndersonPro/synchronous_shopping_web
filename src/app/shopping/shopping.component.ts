@@ -1,3 +1,4 @@
+import { HttpService } from './../services/http.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -20,12 +21,58 @@ export class ShoppingComponent {
 
   public formSyncronous$: Observable<any>;
 
-  constructor(private fb: FormBuilder) { 
+  constructor(private fb: FormBuilder, private httpService: HttpService) { 
     this.formSyncronous$ = this.formSyncronous.valueChanges;
   }
 
   sendRequest() {
-    console.log(this.formSyncronous)
+    // const dummyData = {
+    //     ccenters:5,
+    //     cfish:5,
+    //     croads:5,
+    //     roads:[
+    //         { center_init:1, center_end:2, cost:10 },
+    //         { center_init:1, center_end:3, cost:10 },
+    //         { center_init:2, center_end:4, cost:10 },
+    //         { center_init:3, center_end:5, cost:10 },
+    //         { center_init:4, center_end:5, cost:10 }
+    //     ],
+    //     centers:[
+    //         { cant_type_fish: 1, types_fish: [ { type_fish: 1 } ]},
+    //         { cant_type_fish: 1, types_fish: [ { type_fish: 2 } ]},
+    //         { cant_type_fish: 1, types_fish: [ { type_fish: 3 } ]},
+    //         { cant_type_fish: 1, types_fish: [ { type_fish: 4 } ]},
+    //         { cant_type_fish: 1, types_fish: [ { type_fish: 5 } ]}
+    //     ]
+    // };
+    const formData = this.formSyncronous.value;
+    const data = {
+        parameters: `${formData.ccenters},${formData.cfish},${formData.croads}`,
+        shoping_centers: this.parseCenterstoString(formData.centers),
+        roads: this.parseRoadstoString(formData.roads)
+    }
+    this.httpService.sendData(data).subscribe(console.log);
+  }
+
+  parseRoadstoString (roads: Array<any>): string {
+    let response = '';
+    roads.forEach(({ center_init, center_end, cost }, index) => {
+        response += `${center_init},${center_end},${cost}`;
+        response += (index === roads.length - 1) ? '' : '-';
+    });  
+    return response;
+  }
+
+  parseCenterstoString (centers: Array<any>) : string {
+    let response = '';
+    centers.forEach(({ cant_type_fish: cant, types_fish: types }: { cant_type_fish: Number, types_fish: []}, indexCenters) => {
+        response += `${cant},`;
+        types.forEach(({ type_fish: type }, indexTypes) => {
+            response += `${type}`;
+            response += (indexTypes === types.length - 1) ? indexCenters === centers.length - 1 ? '' : '-' : ',';
+        })
+    })
+    return response;
   }
 
   get roads () {
